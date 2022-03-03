@@ -18,13 +18,13 @@ namespace XPassword
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class WindowsXpassword : Window
     {
 
-        public MainWindow()
+        public WindowsXpassword()
         {
             InitializeComponent();
-            //TextBoxOutputGeneratedPassword.Text = "";
+            TextBoxOutputGeneratedPassword.Text = "";
         }
     }
 }
