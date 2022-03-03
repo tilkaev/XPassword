@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:XPassword"
         mc:Ignorable="d"
-        Height="512"
-        Width="720"
+        Height="600"
+        Width="920"
         Background="Transparent"
         WindowStyle="None"
         AllowsTransparency="True">
