@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:XPassword"
         mc:Ignorable="d"
-        Height="512"
-        Width="720"
+        Height="250"
+        Width="300"
         Background="Transparent"
         WindowStyle="None"
         AllowsTransparency="True">
@@ -27,13 +27,77 @@
         </Style>
     </Window.Resources>
 
-    <Border Margin="5 0"
-            CornerRadius="15" 
-            Background="#E5E5E5"
-            BorderBrush="Black"
-            >
-        
-        
+    <Border CornerRadius="5" 
+            Background="#1a1a1a"
+            MouseDown="MoveWindow">
 
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="95"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Background="Transparent"
+                       Grid.Row="1"
+                       Padding="0">
+                <TextBlock.Text>
+                    asd
+                </TextBlock.Text>
+                
+            </TextBlock>
+
+
+            <Grid Grid.Row="1"
+                  Width="240"
+                  Height="30">
+
+                <Border Width="19" HorizontalAlignment="Left" Height="18" Background="#F25AC9"/>
+                
+                <Border CornerRadius="5">
+                    <Border.Background>
+                        <SolidColorBrush Color="#fff" Opacity=".1"/>
+                    </Border.Background>
+                    <Border.Effect>
+                        <BlurEffect Radius="5" KernelType="Gaussian"></BlurEffect>
+                    </Border.Effect>
+
+                    <TextBlock Text="Главная"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontFamily="poppins"
+                               Foreground="#fff"/>
+                </Border>
+            </Grid>
+            
+            
+            <Button Background="Transparent"
+                    BorderThickness="0"
+                    Grid.Row="3" Padding="0">
+                <Button.Content>
+                    <Border CornerRadius="5"
+                            Width="240"
+                            Height="30">
+                        <Border.Background>
+                            <SolidColorBrush Color="#fff" Opacity=".1"/>
+                        </Border.Background>
+                        <Border.Effect>
+                            <BlurEffect Radius="5" KernelType="Gaussian"></BlurEffect>
+                        </Border.Effect>
+
+                        <TextBlock Text="Войти"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontFamily="poppins"
+                                   Foreground="#fff"/>
+                    </Border>
+                </Button.Content>
+            </Button>
+        </Grid>
+
+ 
+ 
     </Border>
 </Window>

@@ -25,6 +25,12 @@ namespace XPassword
         {
             InitializeComponent();
             //TextBoxOutputGeneratedPassword.Text = "";
+
+        }
+
+        private void MoveWindow(object sender, MouseButtonEventArgs e)
+        {
+           DragMove();
         }
     }
 }
