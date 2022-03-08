@@ -40,8 +40,8 @@
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Background="Transparent"
-                       Grid.Row="1"
+            <TextBlock Background="Transparent" Margin="100 0 0 0"
+                       Grid.Row="0"
                        Padding="0">
                 <TextBlock.Text>
                     asd
@@ -50,30 +50,39 @@
             </TextBlock>
 
 
-            <Grid Grid.Row="1"
-                  Width="240"
-                  Height="30">
+            <Grid Grid.Row="0"
+                  Width="130"
+                  Height="35">
 
-                <Border Width="19" HorizontalAlignment="Left" Height="18" Background="#F25AC9"/>
-                
-                <Border CornerRadius="5">
+                <Border Panel.ZIndex="0" Width="50" HorizontalAlignment="Left" Height="35" CornerRadius="10">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" Opacity="0.85" >
+                            <GradientStop Color="#F25AC9" Offset="0"/>
+                            <GradientStop Color="#1a1a1a" Offset="1"/>
+                        </LinearGradientBrush>
+                        <!--<SolidColorBrush Color="#F25AC9" Opacity=".5"/>-->
+                    </Border.Background>
+                    <Border.Effect>
+                        <BlurEffect Radius="10" KernelType="Gaussian"></BlurEffect>
+                    </Border.Effect>
+                </Border>
+
+                <Border Panel.ZIndex="1" CornerRadius="10 0 0 10" >
                     <Border.Background>
                         <SolidColorBrush Color="#fff" Opacity=".1"/>
                     </Border.Background>
-                    <Border.Effect>
-                        <BlurEffect Radius="5" KernelType="Gaussian"></BlurEffect>
-                    </Border.Effect>
+                </Border>
 
-                    <TextBlock Text="Главная"
+                <TextBlock Text="Главная"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                FontFamily="poppins"
-                               Foreground="#fff"/>
-                </Border>
+                               Foreground="#fff"
+                           FontSize="15"/>
             </Grid>
             
             
-            <Button Background="Transparent"
+            <Button Background="Transparent" Click="Button_Click"
                     BorderThickness="0"
                     Grid.Row="3" Padding="0">
                 <Button.Content>

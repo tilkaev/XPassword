@@ -18,25 +18,13 @@ namespace XPassword
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class WindowsXpassword1 : Window
     {
 
-        public MainWindow()
+        public WindowsXpassword1()
         {
             InitializeComponent();
-            //TextBoxOutputGeneratedPassword.Text = "";
-
-        }
-
-        private void MoveWindow(object sender, MouseButtonEventArgs e)
-        {
-           DragMove();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var win = new WindowsXpassword();
-            win.Show();
+            TextBoxOutputGeneratedPassword.Text = "";
         }
     }
 }
