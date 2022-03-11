@@ -52,5 +52,10 @@ namespace XPassword
             animationIsTrue = false;
 
         }
+
+        private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
