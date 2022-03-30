@@ -30,13 +30,49 @@ namespace XPassword
 
         private void MoveWindow(object sender, MouseButtonEventArgs e)
         {
-           DragMove();
+            try
+            {
+                DragMove();
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        public void Show_Win(Window win, double x = 0, double y = 0) // Создание окна закрытие старого
         {
-            var win = new WindowsXpassword();
-            win.Show();
+            double cor_width = 0;
+            if (this.Width < win.Width)
+            { cor_width = win.Width / 4; }
+
+            this.Visibility = System.Windows.Visibility.Collapsed;
+            Drag_Win(win, Left - cor_width - x, Top - y);
+            win.Closed += (sender2, e2) =>
+            {
+                passwordBox.Password = "";
+
+                Drag_Win(this, win.Left + cor_width + x, win.Top + y);
+
+                this.Visibility = System.Windows.Visibility.Visible;
+            };
+            win.ShowDialog();
+        }
+
+        public void Drag_Win(Window sender, double x, double y) // Размещение окна
+        {
+            sender.Left = x;
+            sender.Top = y;
+
+        }
+        private void btnLogin_Click(object sender, RoutedEventArgs e)
+        {
+            Show_Win(new WindowsXpassword());
+        }
+
+        private void btnExit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

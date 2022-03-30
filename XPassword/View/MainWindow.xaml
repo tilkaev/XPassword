@@ -104,10 +104,10 @@
                     />
 
             
-            <PasswordBox Grid.Row="1" Visibility="Visible"
+            <PasswordBox Grid.Row="1"
                          BorderThickness="0"
                          VerticalContentAlignment="Center"
-                         x:Name="FloatingPasswordBox"
+                         x:Name="passwordBox"
                          Width="240"
                          Height="30"
                          Foreground="White"
@@ -123,6 +123,8 @@
 
 
             <Button Grid.Row="3" VerticalAlignment="Top"
+                    Name="btnLogin"
+                    Click="btnLogin_Click"
                     Content="Войти"
                     Background="#252525"
                     Width="240"
@@ -162,6 +164,8 @@
 
             <DockPanel Grid.Row="4">
                 <Button VerticalAlignment="Top"
+                        Name="btnExit"
+                        Click="btnExit_Click"
                         HorizontalAlignment="Left"
                         Padding="0"
                         FontFamily="Roboto"
