@@ -44,7 +44,7 @@ namespace XPassword
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (!animationIsTrue) 
+            if (!animationIsTrue)
                 animation();
         }
 

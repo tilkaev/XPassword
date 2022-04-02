@@ -1,4 +1,4 @@
-﻿<Window x:Class="XPassword.MainWindow"
+﻿<Window x:Class="XPassword.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,25 +13,15 @@
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen">
 
-    <Window.Resources>
-        <Style TargetType="Label">
-            <Setter Property="FontFamily" Value="Sans"/>
-            <Setter Property="Foreground" Value="yellow"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        </Style>
-        
-        <Style TargetType="CheckBox">
-            <Setter Property="FontFamily" Value="Sans"/>
-            <Setter Property="Foreground" Value="#ff0505"/>
-            <Setter Property="VerticalContentAlignment" Value="Bottom"/>
-            <Setter Property="FontFamily" Value="18"/>
-        </Style>
-    </Window.Resources>
 
     <Border CornerRadius="5" 
             Background="#1a1a1a"
-            MouseDown="MoveWindow">
+            MouseDown="MoveWindow"
+            Margin="5">
+        <Border.Effect>
+
+            <DropShadowEffect Color="gray" ShadowDepth="0" BlurRadius="10"/>
+        </Border.Effect>
 
 
         <Grid>
