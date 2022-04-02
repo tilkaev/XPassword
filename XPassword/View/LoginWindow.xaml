@@ -19,7 +19,6 @@
             MouseDown="MoveWindow"
             Margin="5">
         <Border.Effect>
-
             <DropShadowEffect Color="gray" ShadowDepth="0" BlurRadius="10"/>
         </Border.Effect>
 

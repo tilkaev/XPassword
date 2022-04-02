@@ -1,5 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
     <ControlTemplate x:Key="ExitBtn" TargetType="Button">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Name="btnExit">
             <Image Source="/Icons/logoutwhite.png" Height="20">

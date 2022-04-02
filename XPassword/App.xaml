@@ -6,8 +6,9 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Theme/TopButtonTheme.xaml"/>
                 <ResourceDictionary Source="Theme/ExitButtonTheme.xaml"/>
+                <ResourceDictionary Source="Theme/ElementCenterMenuTheme.xaml"/>
+                <ResourceDictionary Source="Theme/TopButtonTheme.xaml"/>
                 <ResourceDictionary Source="Theme/LeftButtonTheme.xaml"/>
                 <ResourceDictionary Source="Theme/ScrolBarTheme.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
