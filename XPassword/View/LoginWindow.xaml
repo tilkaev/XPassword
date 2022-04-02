@@ -35,7 +35,7 @@
 
             <StackPanel Orientation="Horizontal" Width="170" Height="63" VerticalAlignment="Top" Margin="0 10 0 0">
                 
-                <Image Source="/Icons/white.png" Margin="10 0 0 0"/>
+                <Image Source="/Icons/xpwhite.png" Margin="10 0 0 0"/>
 
                 <TextBlock Background="Transparent"
                            Margin="-10 0 0 0"
