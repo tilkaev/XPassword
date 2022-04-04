@@ -24,6 +24,31 @@
                                         </Setter>
                                         <Setter Property="BorderThickness" Value="1"/>
                                     </DataTrigger>
+                                    
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource
+                                        Mode=FindAncestor,
+                                        AncestorType={x:Type Button}},
+                                        Path=IsPressed}"
+                                                 Value="true">
+                                        <Setter Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect ShadowDepth="0" BlurRadius="4" Color="#fff"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource
+                                        Mode=FindAncestor,
+                                        AncestorType={x:Type Button}},
+                                        Path=IsFocused}"
+                                                 Value="true">
+                                        <Setter Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect ShadowDepth="0" BlurRadius="4" Color="#fff"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                    </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
@@ -49,6 +74,21 @@
                                                  Value="true">
                                         <Setter Property="Foreground" Value="#fff"/>
                                     </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource
+                                        Mode=FindAncestor,
+                                        AncestorType={x:Type Button}},
+                                        Path=IsPressed}"
+                                                 Value="true">
+                                        <Setter Property="Foreground" Value="#fff"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource
+                                        Mode=FindAncestor,
+                                        AncestorType={x:Type Button}},
+                                        Path=IsFocused}"
+                                                 Value="true">
+                                        <Setter Property="Foreground" Value="#fff"/>
+                                    </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Label.Style>
@@ -57,7 +97,7 @@
                     <Label Content="{Binding nameofgroup}" 
                            Background="Transparent"
                            FontSize="10"
-                           Margin="0 -5 0 0"
+                           Margin="0 -4 0 0"
                            VerticalContentAlignment="Top"
                            HorizontalAlignment="Right">
                         <Label.Style>
@@ -65,6 +105,21 @@
                                 <Setter Property="Foreground" Value="#5E5E5E"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=Btn}"
+                                                 Value="true">
+                                        <Setter Property="Foreground" Value="#fff"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource
+                                        Mode=FindAncestor,
+                                        AncestorType={x:Type Button}},
+                                        Path=IsPressed}"
+                                                 Value="true">
+                                        <Setter Property="Foreground" Value="#fff"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource
+                                        Mode=FindAncestor,
+                                        AncestorType={x:Type Button}},
+                                        Path=IsFocused}"
                                                  Value="true">
                                         <Setter Property="Foreground" Value="#fff"/>
                                     </DataTrigger>

@@ -3,18 +3,34 @@
 
 
     <ControlTemplate x:Key="LeftButtons" TargetType="Button">
-        <Grid Name="Btn" Height="30">
+        <Grid Name="Btn" Height="35">
             <Border>
                 <Grid>
                     <Label Content="{TemplateBinding Content}" 
                            Background="Transparent"
                            FontSize="14"
-                           Margin="10 0 0 0">
+                           VerticalAlignment="Center">
                         <Label.Style>
                             <Style TargetType="Label">
+                                <Setter Property="Margin" Value="10 0 0 0"/>
                                 <Setter Property="Foreground" Value="#5E5E5E"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=Btn}"
+                                                 Value="true">
+                                        <Setter Property="Foreground" Value="#fff"/>
+                                    </DataTrigger>
+                                    <!--<DataTrigger Binding="{Binding RelativeSource={RelativeSource
+                                        Mode=FindAncestor,
+                                        AncestorType={x:Type Button}},
+                                        Path=IsPressed}"
+                                                 Value="true">
+                                        <Setter Property="Foreground" Value="#fff"/>
+                                        <Setter Property="Margin" Value="10 1 0 0"/>
+                                    </DataTrigger>-->
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource
+                                        Mode=FindAncestor,
+                                        AncestorType={x:Type Button}},
+                                        Path=IsFocused}"
                                                  Value="true">
                                         <Setter Property="Foreground" Value="#fff"/>
                                     </DataTrigger>
@@ -29,6 +45,13 @@
                                 <Setter Property="BorderThickness" Value="0"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=BorderDepth}"
+                                                 Value="true">
+                                        <Setter Property="BorderThickness" Value=".5"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource
+                                        Mode=FindAncestor,
+                                        AncestorType={x:Type Button}},
+                                        Path=IsFocused}"
                                                  Value="true">
                                         <Setter Property="BorderThickness" Value=".5"/>
                                     </DataTrigger>
@@ -48,6 +71,14 @@
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=Btn}"
                                                      Value="true">
+                                        <Setter Property="Opacity" Value="0"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource
+                                        Mode=FindAncestor,
+                                        AncestorType={x:Type Button}},
+                                        Path=IsFocused}"
+                                                 Value="true">
                                         <Setter Property="Opacity" Value="0"/>
                                     </DataTrigger>
                                 </Style.Triggers>
