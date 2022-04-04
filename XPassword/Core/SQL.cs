@@ -12,22 +12,25 @@ namespace SpaceBaseApp.Core
 {
     class SQL
     {
+        //public static SqlConnection connect { get; set; }
 
-        private SqlConnection connect = new SqlConnection(@"data source=25.68.7.66\SqlExpress;initial catalog=XPassword;user id=user;password=124279123;MultipleActiveResultSets=True;App=EntityFramework");
+        static SQL()
+        {
+            if (Environment.MachineName == "104-04")
+            {
+                connect = new SqlConnection(@"data source=104-04\SQLEXPRESS01;initial catalog=XPassword;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework");
+            }
+            else 
+            { 
+            connect = new SqlConnection(@"data source=25.68.7.66\SqlExpress;initial catalog=XPassword;user id=user;password=124279123;MultipleActiveResultSets=True;App=EntityFramework");
+            }
+        }
 
-        /*
-         SqlConnection connect = new SqlConnection(@"data source=10.10.10.21\SqlExpress;initial catalog=taxi;user id=user;password=124279123;MultipleActiveResultSets=True;App=EntityFramework");
-            connect.Open();
-            dt = new DataTable();
 
-            SqlCommand cmd = new SqlCommand(sql, connect);
-            dt.Load(cmd.ExecuteReader());
-            main_data_grid.ItemsSource = dt.AsDataView();
+        private static SqlConnection connect;
 
-            connect.Close();
-         */
 
-        public void SQLConnect()
+        public static void SQLConnect()
         {
             try
             {
@@ -35,19 +38,19 @@ namespace SpaceBaseApp.Core
             }
             catch (Exception)
             {
-                this.Close();
+                Close();
                 throw;
             }
         }
 
 
-        public DataTable Inquiry(string sql) //Возвращаем результат запроса
+        public static DataTable Inquiry(string sql) //Возвращаем результат запроса
         {
             DataTable inv = new DataTable();
 
             try
             {
-                using (SqlCommand cmd = new SqlCommand(sql, this.connect))
+                using (SqlCommand cmd = new SqlCommand(sql, connect))
                 {
                     SqlDataReader result = cmd.ExecuteReader();
                     inv.Load(result);
@@ -56,18 +59,18 @@ namespace SpaceBaseApp.Core
             }
             catch (Exception)
             {
-                this.Close();
+                Close();
                 throw;
             }
 
         }
 
-        public bool Execute(string sql)
+        public static bool Execute(string sql)
         {
             try
             {
 
-                using (SqlCommand cmd = new SqlCommand(sql, this.connect))
+                using (SqlCommand cmd = new SqlCommand(sql, connect))
                 {
                     cmd.ExecuteNonQuery();
                     return true;
@@ -75,13 +78,13 @@ namespace SpaceBaseApp.Core
             }
             catch (Exception)
             {
-                this.Close();
+                Close();
                 throw;
                 return false;
             }
         }
 
-        public void Close()
+        public static void Close()
         {
             try
             {
@@ -89,6 +92,7 @@ namespace SpaceBaseApp.Core
             }
             catch (Exception)
             {
+                throw;
                 return;
             }
         }

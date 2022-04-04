@@ -36,7 +36,7 @@
                            HorizontalAlignment="Left"
                            />
 
-                    <Label Content="{TemplateBinding Content}" 
+                    <Label Content="{Binding nameofcard}" 
                            Background="Transparent"
                            FontSize="14"
                            Margin="30 0 0 3"
@@ -54,7 +54,26 @@
                         </Label.Style>
                     </Label>
 
-                    
+                    <Label Content="{Binding nameofgroup}" 
+                           Background="Transparent"
+                           FontSize="10"
+                           Margin="0 -5 0 0"
+                           VerticalContentAlignment="Top"
+                           HorizontalAlignment="Right">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Setter Property="Foreground" Value="#5E5E5E"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=Btn}"
+                                                 Value="true">
+                                        <Setter Property="Foreground" Value="#fff"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
+
+
 
 
                 </Grid>
