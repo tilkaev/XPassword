@@ -72,7 +72,7 @@
                 </TextBox.Style>
             </TextBox>
 
-            <Image Name="Img" Source="/Icons/webwhite.png" Height="15" HorizontalAlignment="Right">
+            <Image Name="Img" Source="/Icons/icons8-web-64.png" Height="15" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Setter Property="Margin" Value="0 10 5 0"/>

@@ -20,6 +20,10 @@ namespace SpaceBaseApp.Core
             {
                 connect = new SqlConnection(@"data source=104-04\SQLEXPRESS01;initial catalog=XPassword;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework");
             }
+            else if (Environment.MachineName == "212-01")
+            {
+                connect = new SqlConnection(@"data source=212-01\SQLEXPRESS;initial catalog=XPassword;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework");
+            }
             else 
             { 
             connect = new SqlConnection(@"data source=25.68.7.66\SqlExpress;initial catalog=XPassword;user id=user;password=124279123;MultipleActiveResultSets=True;App=EntityFramework");

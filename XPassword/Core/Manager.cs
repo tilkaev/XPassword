@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace XPassword.Core
 {
-    class ObservableObject
+    class Manager
     {
+
+        public static void ShowPassword()
+        {
+
+        }
     }
 }
