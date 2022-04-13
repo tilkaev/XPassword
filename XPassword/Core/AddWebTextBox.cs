@@ -23,7 +23,9 @@ namespace XPassword.Core
         private StackPanel MainOutputStackPanel;
         TextBox uielement;
         String text;
+        Grid grid;
 
+        public UIElement getuielement() { return grid; }
 
         private static bool IsValidUri(string uri)
         {
@@ -50,7 +52,8 @@ namespace XPassword.Core
 
         private void CopyWebToClipboard(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(text);
+            Clipboard.SetData(DataFormats.Text, (Object)text);
+            WindowXpassword.ShowInfoFromCopy();
         }
 
 
@@ -61,7 +64,7 @@ namespace XPassword.Core
             ControlTemplate template2 = (ControlTemplate)windowsender.FindResource("BtnWeb");
 
 
-            var grid = new Grid();
+            grid = new Grid();
 
             var padding = new Thickness(0);
             padding.Right = 30;

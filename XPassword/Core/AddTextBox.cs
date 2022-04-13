@@ -23,6 +23,9 @@ namespace XPassword.Core
         string text;
         TextBox uielement;
 
+
+        public UIElement getuielement() { return uielement; }
+
         public void add(string _text, string hinttext)
         {
             text = _text;
@@ -37,6 +40,7 @@ namespace XPassword.Core
             uielement.MouseDoubleClick += CopyTextToClipboard;
             HintAssist.SetHint(uielement, hinttext);
             MainOutputStackPanel.Children.Add(uielement);
+
         }
 
         private void CopyTextToClipboard(object sender, RoutedEventArgs e)

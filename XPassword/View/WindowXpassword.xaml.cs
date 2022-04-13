@@ -42,8 +42,10 @@ namespace XPassword
         public WindowXpassword()
         {
             InitializeComponent();
-            btnEdit = BtnEdit;
+
             contentOfCard = new List<IContentOfCard>();
+
+            btnEdit = BtnEdit;
             string sql = String.Format("select * from группы");
             string sql2 = String.Format("select карт.идкарты, карт.наименование, грп.наименование from сплитгруппыкартотеки as сплит, группы as грп, картотека as карт where сплит.идгруппы = грп.идгруппы and сплит.идкарты = карт.идкарты");
             string sql3 = String.Format($"select * from запись where запись.идкарты = {2}");
@@ -87,11 +89,7 @@ namespace XPassword
             ViewCenterMenu.ItemsSource = list;
             ViewLeftMenu.ItemsSource = leftDataTable.AsDataView();
 
-            //contentOfCard.Add(new AddTextBox(this, "asdas", "Логин"));
-            //contentOfCard.Add(new AddPasswordBox(this, "asdasasdasasdasasdasasdasasdasasdasasdasasdasasdas", "Пароль"));
-            //contentOfCard.Add(new AddPasswordBox(this, "6657", "Пароль"));
-            //contentOfCard.Add(new AddPasswordBox(this, "123", "Пароль"));
-            //contentOfCard.Add(new AddWebTextBox(this, "mail.ru", "Сайт"));
+            
 
 
         }
@@ -148,6 +146,51 @@ namespace XPassword
 
 
             ViewCenterMenu.ItemsSource = list;
+        }
+
+        private void CenterButtonMenu(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in contentOfCard)
+            {
+                MainOutputStackPanel.Children.Remove(item.getuielement());
+            }
+            contentOfCard = new List<IContentOfCard>();
+            int idcard = int.Parse(((Button)sender).Tag.ToString());
+            string sql = String.Format($"select * from запись where запись.идкарты = {idcard} order by идсортиовки");
+
+            SQL.SQLConnect();
+            centerDataTable = SQL.Inquiry(sql);
+            SQL.Close();
+
+
+
+            for (int i = 0; i < centerDataTable.Rows.Count; i++) //Строка
+            {
+                int idtype = int.Parse(centerDataTable.Rows[i][2].ToString());
+                string nameofline = centerDataTable.Rows[i][4].ToString();
+                string content = centerDataTable.Rows[i][5].ToString();
+                switch (idtype)
+                {
+                    case 1:
+                        contentOfCard.Add(new AddTextBox(this, content, nameofline));
+                        break;
+                    case 2:
+                        contentOfCard.Add(new AddPasswordBox(this, content, nameofline));
+                        break;
+                    case 3:
+                        contentOfCard.Add(new AddWebTextBox(this, content, nameofline));
+                        break;
+                }
+            }
+
+            
+
+
+            //contentOfCard.Add(new AddTextBox(this, "asdas", "Логин"));
+            //contentOfCard.Add(new AddPasswordBox(this, "asdasasdasasdasasdasasdasasdasasdasasdasasdasasdas", "Пароль"));
+            //contentOfCard.Add(new AddPasswordBox(this, "6657", "Пароль"));
+            //contentOfCard.Add(new AddPasswordBox(this, "123", "Пароль"));
+            //contentOfCard.Add(new AddWebTextBox(this, "mail.ru", "Сайт"));
         }
     }
 

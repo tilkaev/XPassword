@@ -11,5 +11,7 @@ namespace XPassword.Core
     {
         void add(string hinttext, string text);
 
+        UIElement getuielement();
+
     }
 }

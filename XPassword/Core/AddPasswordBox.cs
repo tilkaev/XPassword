@@ -22,8 +22,11 @@ namespace XPassword.Core
         private WindowXpassword windowsender;
         private StackPanel MainOutputStackPanel;
         TextBox uielement;
+        Grid grid;
         String text;
         bool show = false;
+
+        public UIElement getuielement() { return grid; }
 
         private void ManagerForShowHidenPassword(object sender, RoutedEventArgs e)
         {
@@ -52,7 +55,7 @@ namespace XPassword.Core
             ControlTemplate template2 = (ControlTemplate)windowsender.FindResource("BtnEye");
 
 
-            var grid = new Grid();
+            grid = new Grid();
 
             var padding = new Thickness(0);
             padding.Right = 30;
@@ -75,6 +78,8 @@ namespace XPassword.Core
             MainOutputStackPanel.Children.Add(grid);
 
             uielement.MouseDoubleClick += CopyPasswordToClipboard;
+
+
             //((Button)uielement.FindName("BtnEye")).Click += ManagerForShowHidenPassword;
             //var myTextBlock = (Button)uielement.FindName("BtnEye");
             //myTextBlock.Content = 12;
