@@ -31,7 +31,7 @@ namespace SpaceBaseApp.Core
         }
 
 
-        private static SqlConnection connect;
+        public static SqlConnection connect;
 
 
         public static void SQLConnect()

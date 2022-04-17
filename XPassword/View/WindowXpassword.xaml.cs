@@ -5,9 +5,11 @@ using System.Data;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using XPassword.Core;
+using XPassword.View;
 
 namespace XPassword
 {
@@ -36,6 +38,7 @@ namespace XPassword
         DataTable centerDataTable;
         DataTable cardEntriesTable;
         List<IContentOfCard> contentOfCard;
+        List<resourcesforcenter> centerList;
         static Button btnEdit;
 
 
@@ -44,59 +47,264 @@ namespace XPassword
             InitializeComponent();
 
             contentOfCard = new List<IContentOfCard>();
-
             btnEdit = BtnEdit;
-            string sql = String.Format("select * from группы");
-            string sql2 = String.Format("select карт.идкарты, карт.наименование, грп.наименование from сплитгруппыкартотеки as сплит, группы as грп, картотека as карт where сплит.идгруппы = грп.идгруппы and сплит.идкарты = карт.идкарты");
-            string sql3 = String.Format($"select * from запись where запись.идкарты = {2}");
+
+            
 
             SQL.SQLConnect();
-            leftDataTable = SQL.Inquiry(sql);
-            centerDataTable = SQL.Inquiry(sql2);
-            cardEntriesTable = SQL.Inquiry(sql3);
+            ShowLeft();
+            ShowCenter();
+            ShowRight(int.Parse(centerDataTable.Rows[0][0].ToString()));
             SQL.Close();
 
+        }
 
-            var list = new List<resourcesforcenter>();
+        private void ShowLeft()
+        {
+            string sql = String.Format("select * from группы");
+            leftDataTable = SQL.Inquiry(sql);
+
+            ViewLeftMenu.ItemsSource = leftDataTable.AsDataView();
+
+        }
+
+        private void ShowCenter(int idgroup=0)
+        {
+            string sql;
+
+            if (idgroup == 0)
+            {
+                sql = String.Format("select карт.идкарты, карт.наименование, грп.наименование from сплитгруппыкартотеки as сплит, группы as грп, картотека as карт where сплит.идгруппы = грп.идгруппы and сплит.идкарты = карт.идкарты");
+            }
+            else
+            {
+                sql = String.Format($"select карт.идкарты, карт.наименование, грп.наименование from сплитгруппыкартотеки as сплит, группы as грп, картотека as карт where сплит.идгруппы = грп.идгруппы and сплит.идкарты = карт.идкарты  and грп.идгруппы = {idgroup} ");
+            }
+
+            centerDataTable = SQL.Inquiry(sql);
+
+            centerList = new List<resourcesforcenter>();
             string id, nameofcard, nameofgroup;
-            for (int i = 0; i < centerDataTable.Rows.Count; i++) //Строка
+            for (int i = 0; i < centerDataTable.Rows.Count; i++) //По строке
             {
                 id = centerDataTable.Rows[i][0].ToString();
                 nameofcard = centerDataTable.Rows[i][1].ToString();
                 nameofgroup = centerDataTable.Rows[i][2].ToString();
 
-                if (!list.Exists(x => x.id == id))
-                    list.Add(new resourcesforcenter(id, nameofcard, nameofgroup));
+                if (!centerList.Exists(x => x.id == id))
+                    centerList.Add(new resourcesforcenter(id, nameofcard, nameofgroup));
                 else
-                    list.Find(x => x.id == id).nameofgroup += $", {nameofgroup}";
-            }
-            /*
-            foreach (var item in list)
-            {
-                Console.WriteLine($"res: {item.id.ToString()}");
-                Console.WriteLine($"res: {item.nameofcard.ToString()}");
-                Console.WriteLine($"res: {item.nameofgroup.ToString()}");
-            }*/
-
-
-            string id2;
-            for (int i = 0; i < cardEntriesTable.Rows.Count; i++) //Строка
-            {
-                id2 = cardEntriesTable.Rows[i][2].ToString();
-                Console.WriteLine(id2);
+                    centerList.Find(x => x.id == id).nameofgroup += $", {nameofgroup}";
             }
 
-            ViewCenterMenu.ItemsSource = list;
-            ViewLeftMenu.ItemsSource = leftDataTable.AsDataView();
+
+            ViewCenterMenu.ItemsSource = centerList;
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ViewCenterMenu.ItemsSource);
+            view.Filter = UserFilter;
+        }
+
+        private void ShowRight(int idcard=0)
+        {
+            string nameofcard, nameofgroup;
+            nameofcard = centerList.Find(x => x.id == idcard.ToString()).nameofcard;
+            nameofgroup = centerList.Find(x => x.id == idcard.ToString()).nameofgroup;
+            labelNameCard.Content = nameofcard;
+            labelNameGroup.Content = nameofgroup;
 
             
 
+            foreach (var item in contentOfCard)
+            {
+                MainOutputStackPanel.Children.Remove(item.getuielement());
+            }
+            contentOfCard = new List<IContentOfCard>();
+            string sql = String.Format($"select * from запись where запись.идкарты = {idcard} order by идсортиовки");
 
+            cardEntriesTable = SQL.Inquiry(sql);
+
+
+            for (int i = 0; i < cardEntriesTable.Rows.Count; i++) //Строка
+            {
+                int idtype = int.Parse(cardEntriesTable.Rows[i][2].ToString());
+                string nameofline = cardEntriesTable.Rows[i][4].ToString();
+                string content = cardEntriesTable.Rows[i][5].ToString();
+                switch (idtype)
+                {
+                    case 1:
+                        contentOfCard.Add(new AddTextBox(this, content, nameofline));
+                        break;
+                    case 2:
+                        contentOfCard.Add(new AddPasswordBox(this, content, nameofline));
+                        break;
+                    case 3:
+                        contentOfCard.Add(new AddWebTextBox(this, content, nameofline));
+                        break;
+                }
+            }
         }
 
-       
 
-        private void TextBox_SelectionChanged(object sender, RoutedEventArgs e)
+        private void LeftButtonMenuClick(object sender, RoutedEventArgs e)
+        {
+            int idgroup = int.Parse(((Button)sender).Tag.ToString());
+
+            SQL.SQLConnect();
+            ShowCenter(idgroup);
+            SQL.Close();
+        }
+
+        private void CenterButtonMenuClick(object sender, RoutedEventArgs e)
+        {
+            int idcard = int.Parse(((Button)sender).Tag.ToString());
+
+            SQL.SQLConnect();
+            ShowRight(idcard);
+            SQL.Close();
+        }
+
+        private void btnAllGroup_Click(object sender, RoutedEventArgs e)
+        {
+            SQL.SQLConnect();
+            ShowCenter();
+            SQL.Close();
+        }
+
+        private void btnAddGroup_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new ShowInputDialog("Введите название группы:");
+            win.Owner = this;
+            win.ShowDialog();
+            if (!String.IsNullOrEmpty(win.result))
+            {
+                string sql = String.Format($"INSERT INTO группы (наименование) values ('{win.result}')");
+                SQL.SQLConnect();
+                SQL.Execute(sql);
+                ShowLeft();
+                SQL.Close();
+            }
+        }
+
+        private void btnAddCard_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new AddCard();
+            win.Owner = this;
+            win.ShowDialog();
+        }
+
+
+
+        #region CONTEXT MENU
+        private int selectedtypeitem;
+        private int selectedid;
+        private string selectedname;
+
+        private void ShowContextMenu(UIElement element)
+        {
+            ContextMenu cm = this.FindResource("cmLeftButton") as ContextMenu;
+            cm.PlacementTarget = element;
+            cm.IsOpen = true;
+        }
+        private async void LeftButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            selectedtypeitem = 1;
+            selectedid = int.Parse(((Button)sender).Tag.ToString());
+            selectedname = ((Button)sender).Content.ToString();
+
+            await Task.Delay(100);
+            ShowContextMenu(sender as Button);
+            
+        }
+        private async void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            selectedtypeitem = 2;
+            selectedid = int.Parse(((Button)sender).Tag.ToString());
+            selectedname = centerList.Find(x => x.id == selectedid.ToString()).nameofcard;
+
+            await Task.Delay(100);
+            ShowContextMenu(sender as Button);
+        }
+
+
+        private void RenameItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowInputDialog win;
+
+            if (selectedtypeitem == 1)
+            {
+                win = new ShowInputDialog($"Имя группы:", selectedname);
+                win.Owner = this;
+                win.ShowDialog();
+                string result = win.result;
+                if (String.IsNullOrEmpty(result))
+                {
+                    return;
+                }
+
+                if (result.Trim() != selectedname)
+                {
+                    string sql = String.Format($"UPDATE группы SET наименование = '{result.Trim()}' where идгруппы = {selectedid}");
+                    SQL.SQLConnect();
+                    SQL.Execute(sql);
+                    ShowLeft();
+                    SQL.Close();
+                }
+
+            }
+            else
+            {
+                //win = new ShowDialog($"");
+                //win.Owner = this;
+                //win.ShowDialog();
+            }
+        }
+
+
+        private void DeleteItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowDialog win;
+
+            if (selectedtypeitem == 1)
+            {
+                win = new ShowDialog($"Удалить группу '{selectedname}'");
+                win.Owner = this;
+                win.ShowDialog();
+                if (win.result)
+                {
+                    string sql = String.Format($"DELETE FROM группы where группы.идгруппы = {selectedid}");
+                    SQL.SQLConnect();
+                    SQL.Execute(sql);
+                    ShowLeft();
+                    SQL.Close();
+                }
+                
+            }
+            else
+            {
+                win = new ShowDialog($"");
+                win.Owner = this;
+                win.ShowDialog();
+            }
+
+            
+
+        }
+        #endregion
+
+
+        #region HELPERS
+        private void CommentTextBox_TextChanged(object sender, TextChangedEventArgs e) // Поиск по центру
+        {
+            CollectionViewSource.GetDefaultView(ViewCenterMenu.ItemsSource).Refresh();
+        }
+        private bool UserFilter(object item) // Поиск по центру
+        {
+            if (String.IsNullOrEmpty(CommentTextBox.Text))
+                return true;
+            else
+                return ((item as resourcesforcenter).nameofcard.IndexOf(CommentTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+        }
+
+        private void TextBox_SelectionChanged(object sender, RoutedEventArgs e) // Для НЕ выделения TextBox
         {
             if (sender != null)
             {
@@ -119,79 +327,18 @@ namespace XPassword
             btnEdit.Opacity = .3;
         }
 
-        private void LeftButtonMenu(object sender, RoutedEventArgs e)
+
+        public void Drag_Win(Window sender, double x, double y) // Размещение окна
         {
-            int idofgroup = int.Parse(((Button)sender).Tag.ToString());
-            ViewCenterMenu.ItemsSource = null;
-
-            string sql = String.Format($"select карт.идкарты, карт.наименование, грп.наименование from сплитгруппыкартотеки as сплит, группы as грп, картотека as карт where сплит.идгруппы = грп.идгруппы and сплит.идкарты = карт.идкарты  and грп.идгруппы = {idofgroup} ");
-
-            SQL.SQLConnect();
-            centerDataTable = SQL.Inquiry(sql);
-            SQL.Close();
-
-            var list = new List<resourcesforcenter>();
-            string id, nameofcard, nameofgroup;
-            for (int i = 0; i < centerDataTable.Rows.Count; i++) //Строка
-            {
-                id = centerDataTable.Rows[i][0].ToString();
-                nameofcard = centerDataTable.Rows[i][1].ToString();
-                nameofgroup = centerDataTable.Rows[i][2].ToString();
-
-                if (!list.Exists(x => x.id == id))
-                    list.Add(new resourcesforcenter(id, nameofcard, nameofgroup));
-                else
-                    list.Find(x => x.id == id).nameofgroup += $", {nameofgroup}";
-            }
-
-
-            ViewCenterMenu.ItemsSource = list;
+            sender.Left = x;
+            sender.Top = y;
         }
 
-        private void CenterButtonMenu(object sender, RoutedEventArgs e)
-        {
-            foreach (var item in contentOfCard)
-            {
-                MainOutputStackPanel.Children.Remove(item.getuielement());
-            }
-            contentOfCard = new List<IContentOfCard>();
-            int idcard = int.Parse(((Button)sender).Tag.ToString());
-            string sql = String.Format($"select * from запись where запись.идкарты = {idcard} order by идсортиовки");
-
-            SQL.SQLConnect();
-            centerDataTable = SQL.Inquiry(sql);
-            SQL.Close();
 
 
+        #endregion
 
-            for (int i = 0; i < centerDataTable.Rows.Count; i++) //Строка
-            {
-                int idtype = int.Parse(centerDataTable.Rows[i][2].ToString());
-                string nameofline = centerDataTable.Rows[i][4].ToString();
-                string content = centerDataTable.Rows[i][5].ToString();
-                switch (idtype)
-                {
-                    case 1:
-                        contentOfCard.Add(new AddTextBox(this, content, nameofline));
-                        break;
-                    case 2:
-                        contentOfCard.Add(new AddPasswordBox(this, content, nameofline));
-                        break;
-                    case 3:
-                        contentOfCard.Add(new AddWebTextBox(this, content, nameofline));
-                        break;
-                }
-            }
-
-            
-
-
-            //contentOfCard.Add(new AddTextBox(this, "asdas", "Логин"));
-            //contentOfCard.Add(new AddPasswordBox(this, "asdasasdasasdasasdasasdasasdasasdasasdasasdasasdas", "Пароль"));
-            //contentOfCard.Add(new AddPasswordBox(this, "6657", "Пароль"));
-            //contentOfCard.Add(new AddPasswordBox(this, "123", "Пароль"));
-            //contentOfCard.Add(new AddWebTextBox(this, "mail.ru", "Сайт"));
-        }
+       
     }
 
 
