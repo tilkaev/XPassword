@@ -38,7 +38,10 @@ namespace SpaceBaseApp.Core
         {
             try
             {
-                connect.Open();
+                if (connect.State != ConnectionState.Open)
+                {
+                    connect.Open();
+                }
             }
             catch (Exception)
             {

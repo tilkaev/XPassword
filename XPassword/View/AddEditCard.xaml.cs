@@ -20,13 +20,13 @@ namespace XPassword.View
     /// <summary>
     /// Логика взаимодействия для ShowInputDialog.xaml
     /// </summary>
-    public partial class AddCard : Window
+    public partial class AddEditCard : Window
     {
         public string result;
         public string result2;
         DataTable dataTable;
 
-        public AddCard()
+        public AddEditCard(string text = "", string titlegroup = "")
         {
             InitializeComponent();
             //    string sql = String.Format($"INSERT INTO картотека (наименование) values ('{win.result}')");
@@ -40,11 +40,17 @@ namespace XPassword.View
             dataTable = SQL.Inquiry(sql);
             SQL.Close();
 
+            int index = 0;
             foreach (DataRow item in dataTable.Rows)
             {
+                if (item[1].ToString() == titlegroup)
+                {
+                    comboBox.SelectedIndex = index;
+                }
                 comboBox.Items.Add(item[1].ToString()); // Заполнение КомбоБокса
+                index++;
             }
-            comboBox.SelectedIndex = 0;
+            textBox.Text = text;
         }
 
 
