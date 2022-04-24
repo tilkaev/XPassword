@@ -9,7 +9,9 @@ namespace XPassword.Core
 {
     interface IContentOfCard
     {
-        void add(string hinttext, string text);
+        void add(string hinttext, string text, string id_tag);
+
+        UIElement getparent();
 
         UIElement getuielement();
 

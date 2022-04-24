@@ -27,6 +27,7 @@ namespace XPassword
         {
             InitializeComponent();
             //TextBoxOutputGeneratedPassword.Text = "";
+            passwordBox.Password = "admin";
 
         }
 
