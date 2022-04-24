@@ -40,6 +40,8 @@ namespace XPassword
         List<IContentOfCard> contentOfCard;
         List<resourcesforcenter> centerList;
         static Button btnEdit;
+        int LAST_ID_GROUP;
+        int LAST_ID_CARD;
 
 
         public WindowXpassword()
@@ -70,8 +72,8 @@ namespace XPassword
 
         private void ShowCenter(int idgroup=0)
         {
+            LAST_ID_GROUP = idgroup;
             string sql;
-
             if (idgroup == 0)
             {
                 
@@ -106,15 +108,21 @@ namespace XPassword
             view.Filter = UserFilter;
         }
 
-        private void ShowRight(int idcard=0)
+        private void ShowRight(int idcard = 0)
         {
+            if (idcard == 0)
+            {
+                idcard = int.Parse(centerList[0].id.ToString());
+            }
+            LAST_ID_CARD = idcard;
             string nameofcard, nameofgroup;
             nameofcard = centerList.Find(x => x.id == idcard.ToString()).nameofcard;
             nameofgroup = centerList.Find(x => x.id == idcard.ToString()).nameofgroup;
             labelNameCard.Content = nameofcard;
             labelNameGroup.Content = nameofgroup;
 
-            
+
+
 
             foreach (var item in contentOfCard)
             {
@@ -299,18 +307,42 @@ INSERT INTO запись(идсортиовки, идполя, идкарты, �
                     SQL.SQLConnect();
                     SQL.Execute(sql);
                     ShowLeft();
+                    if (LAST_ID_GROUP == selectedid)
+                    {
+                        ShowCenter();
+                        ShowRight();
+                    }
                     SQL.Close();
                 }
                 
             }
             else
             {
-                win = new ShowDialog($"");
+                win = new ShowDialog($"Удалить карту '{selectedname}'");
                 win.Owner = this;
                 win.ShowDialog();
+                if (win.result)
+                {
+                    string sql = String.Format($"DELETE FROM картотека where картотека.идкарты = {selectedid}");
+                    SQL.SQLConnect();
+                    SQL.Execute(sql);
+                    ShowCenter(LAST_ID_GROUP);
+                    if (LAST_ID_CARD == selectedid)
+                    {
+                        if (centerList.Count - 1 < 0)
+                        {
+                            ShowCenter();
+                            ShowRight();
+                        }
+                        else
+                        {
+                            ShowRight(int.Parse(centerList[centerList.Count - 1].id.ToString()));
+                        }
+                    }
+                    SQL.Close();
+                }
             }
 
-            
 
         }
         #endregion
@@ -360,10 +392,6 @@ INSERT INTO запись(идсортиовки, идполя, идкарты, �
         }
 
 
-
-
-        #endregion
-
         private void TopMenu_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
@@ -371,6 +399,31 @@ INSERT INTO запись(идсортиовки, идполя, идкарты, �
                 this.DragMove();
             }
         }
+
+
+        private void BtnMinimizedWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void BtnMaximizedWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+        }
+
+        private void BtnCloseWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        #endregion
+
     }
 
 

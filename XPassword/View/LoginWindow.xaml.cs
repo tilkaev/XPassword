@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SpaceBaseApp.Core;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,12 +65,35 @@ namespace XPassword
         }
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            Show_Win(new WindowXpassword());
+            string password = passwordBox.Password;
+
+            if (password is "")
+            {
+                MessageBox.Show("Введите пароль!");
+                return;
+            }
+
+            string sql = String.Format($"select * from auth where password collate Latin1_General_CS_AS like '{password}'");
+            SQL.SQLConnect();
+            DataTable dt = SQL.Inquiry(sql);
+            SQL.Close();
+
+            if (dt.Rows.Count != 0)
+            {
+                Show_Win(new WindowXpassword());
+            }
+            else
+            {
+                MessageBox.Show("Неверный пароль!");
+            }
+
         }
 
         private void btnExit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
+
+        
     }
 }

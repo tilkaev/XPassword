@@ -3,11 +3,11 @@
 
 
     <ControlTemplate x:Key="TopButtons" TargetType="Button">
-        <Grid Name="Btn" Width="30" Margin="30 0 0 0">
+        <Grid Name="Btn" Width="30" Margin="10 0 0 0">
             <Border>
                 <Grid>
                     <Image Source="{DynamicResource ResourceKey=Img}"
-                           Height="125"
+                           Height="26"
                            VerticalAlignment="Top">
                         <Image.Style>
                             <Style TargetType="Image">
