@@ -172,7 +172,8 @@
                         FontWeight="Normal"
                         />
                 
-                <Button VerticalAlignment="Top"
+                <Button x:Name="BtnForgorPassword"
+                        VerticalAlignment="Top"
                         HorizontalAlignment="Right"
                         Padding="0"
                         FontFamily="Roboto"

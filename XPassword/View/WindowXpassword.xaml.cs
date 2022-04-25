@@ -40,7 +40,9 @@ namespace XPassword
         List<IContentOfCard> contentOfCard;
         List<resourcesforcenter> centerList;
         static Button btnEdit;
-
+        int LAST_ID_GROUP;
+        int LAST_ID_CARD;
+        public bool BEING_EDITED_CARD = false;
 
         public WindowXpassword()
         {
@@ -70,8 +72,8 @@ namespace XPassword
 
         private void ShowCenter(int idgroup=0)
         {
+            LAST_ID_GROUP = idgroup;
             string sql;
-
             if (idgroup == 0)
             {
                 
@@ -106,19 +108,38 @@ namespace XPassword
             view.Filter = UserFilter;
         }
 
-        private void ShowRight(int idcard=0)
+        private void ShowRight(int idcard = 0)
         {
+            if (BEING_EDITED_CARD)
+            {
+                GoDeafultBtnEdit();
+                return;
+            }
+            if (idcard == 0)
+            {
+                idcard = int.Parse(centerList[0].id.ToString());
+            }
+            LAST_ID_CARD = idcard;
             string nameofcard, nameofgroup;
-            nameofcard = centerList.Find(x => x.id == idcard.ToString()).nameofcard;
-            nameofgroup = centerList.Find(x => x.id == idcard.ToString()).nameofgroup;
+            try
+            {
+                nameofcard = centerList.Find(x => x.id == idcard.ToString()).nameofcard;
+                nameofgroup = centerList.Find(x => x.id == idcard.ToString()).nameofgroup;
+            }
+            catch (Exception)
+            {
+                nameofcard = "";
+                nameofgroup = "";
+            }
             labelNameCard.Content = nameofcard;
             labelNameGroup.Content = nameofgroup;
 
-            
+
+
 
             foreach (var item in contentOfCard)
             {
-                MainOutputStackPanel.Children.Remove(item.getuielement());
+                MainOutputStackPanel.Children.Remove(item.getparent());
             }
             contentOfCard = new List<IContentOfCard>();
             string sql = String.Format($"select * from запись where запись.идкарты = {idcard} order by идсортиовки");
@@ -131,16 +152,17 @@ namespace XPassword
                 int idtype = int.Parse(cardEntriesTable.Rows[i][2].ToString());
                 string nameofline = cardEntriesTable.Rows[i][4].ToString();
                 string content = cardEntriesTable.Rows[i][5].ToString();
+                string id_tag = cardEntriesTable.Rows[i][0].ToString();
                 switch (idtype)
                 {
                     case 1:
-                        contentOfCard.Add(new AddTextBox(this, content, nameofline));
+                        contentOfCard.Add(new AddTextBox(this, content, nameofline, id_tag));
                         break;
                     case 2:
-                        contentOfCard.Add(new AddPasswordBox(this, content, nameofline));
+                        contentOfCard.Add(new AddPasswordBox(this, content, nameofline, id_tag));
                         break;
                     case 3:
-                        contentOfCard.Add(new AddWebTextBox(this, content, nameofline));
+                        contentOfCard.Add(new AddWebTextBox(this, content, nameofline, id_tag));
                         break;
                 }
             }
@@ -167,6 +189,7 @@ namespace XPassword
 
         private void btnAllGroup_Click(object sender, RoutedEventArgs e)
         {
+            CommentTextBox.Text = "";
             SQL.SQLConnect();
             ShowCenter();
             SQL.Close();
@@ -189,7 +212,7 @@ namespace XPassword
 
         private void btnAddCard_Click(object sender, RoutedEventArgs e)
         {
-            var win = new AddCard();
+            var win = new AddEditCard();
             win.Owner = this;
             win.ShowDialog();
             string result = win.result;
@@ -252,11 +275,10 @@ INSERT INTO запись(идсортиовки, идполя, идкарты, �
 
         private void RenameItem_Click(object sender, RoutedEventArgs e)
         {
-            ShowInputDialog win;
 
             if (selectedtypeitem == 1)
             {
-                win = new ShowInputDialog($"Имя группы:", selectedname);
+                var win = new ShowInputDialog($"Имя группы:", selectedname);
                 win.Owner = this;
                 win.ShowDialog();
                 string result = win.result;
@@ -277,9 +299,22 @@ INSERT INTO запись(идсортиовки, идполя, идкарты, �
             }
             else
             {
-                //win = new ShowDialog($"");
-                //win.Owner = this;
-                //win.ShowDialog();
+                var win = new AddEditCard(selectedname, centerList.Find(x => x.id == selectedid.ToString()).nameofgroup);
+                win.Owner = this;
+                win.ShowDialog();
+                string result = win.result;
+                string result2 = win.result2;
+                if (String.IsNullOrEmpty(result))
+                {
+                    return;
+                }
+
+                string sql = String.Format($"UPDATE картотека SET наименование = '{result2.Trim()}', идгруппы = '{result}'  where идкарты = {selectedid}");
+                SQL.SQLConnect();
+                SQL.Execute(sql);
+                ShowCenter(int.Parse(result));
+                ShowRight(selectedid);
+                SQL.Close();
             }
         }
 
@@ -290,7 +325,7 @@ INSERT INTO запись(идсортиовки, идполя, идкарты, �
 
             if (selectedtypeitem == 1)
             {
-                win = new ShowDialog($"Удалить группу '{selectedname}'");
+                win = new ShowDialog($"Удалить группу '{selectedname}'\nВсе карты этой группы будут удалены");
                 win.Owner = this;
                 win.ShowDialog();
                 if (win.result)
@@ -299,18 +334,42 @@ INSERT INTO запись(идсортиовки, идполя, идкарты, �
                     SQL.SQLConnect();
                     SQL.Execute(sql);
                     ShowLeft();
+                    if (LAST_ID_GROUP == selectedid)
+                    {
+                        ShowCenter();
+                        ShowRight();
+                    }
                     SQL.Close();
                 }
                 
             }
             else
             {
-                win = new ShowDialog($"");
+                win = new ShowDialog($"Удалить карту '{selectedname}'");
                 win.Owner = this;
                 win.ShowDialog();
+                if (win.result)
+                {
+                    string sql = String.Format($"DELETE FROM картотека where картотека.идкарты = {selectedid}");
+                    SQL.SQLConnect();
+                    SQL.Execute(sql);
+                    ShowCenter(LAST_ID_GROUP);
+                    if (LAST_ID_CARD == selectedid)
+                    {
+                        if (centerList.Count - 1 < 0)
+                        {
+                            ShowCenter();
+                            ShowRight();
+                        }
+                        else
+                        {
+                            ShowRight(int.Parse(centerList[centerList.Count - 1].id.ToString()));
+                        }
+                    }
+                    SQL.Close();
+                }
             }
 
-            
 
         }
         #endregion
@@ -331,7 +390,7 @@ INSERT INTO запись(идсортиовки, идполя, идкарты, �
 
         private void TextBox_SelectionChanged(object sender, RoutedEventArgs e) // Для НЕ выделения TextBox
         {
-            if (sender != null)
+            if (sender != null & !BEING_EDITED_CARD)
             {
                 e.Handled = true;
                 if ((sender as TextBox).SelectionLength != 0)
@@ -360,16 +419,91 @@ INSERT INTO запись(идсортиовки, идполя, идкарты, �
         }
 
 
-
-
-        #endregion
-
         private void TopMenu_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
             {
                 this.DragMove();
             }
+        }
+
+
+        private void BtnMinimizedWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void BtnMaximizedWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+        }
+
+        private void BtnCloseWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        #endregion
+
+        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            BEING_EDITED_CARD = true;
+            foreach (var item in contentOfCard)
+            {
+                ((TextBox)item.getuielement()).IsReadOnly = false;
+
+                if (item is AddPasswordBox)
+                {
+                    ((AddPasswordBox)item).show = true;
+                    ((TextBox)item.getuielement()).Text = ((AddPasswordBox)item).text;
+
+                }
+            }
+            BtnEdit.Content = "Сохранить";
+            Grid.SetColumnSpan(BtnEdit, 1);
+            BtnEdit.Click -= BtnEdit_Click;
+            BtnEdit.Click += BtnEdit_Click_Save_Change;
+            BtnCancel.Visibility = Visibility.Visible;
+        }
+
+        private void GoDeafultBtnEdit()
+        {
+            BEING_EDITED_CARD = false;
+            BtnEdit.Content = "Изменить";
+            Grid.SetColumnSpan(BtnEdit, 2);
+            BtnEdit.Click -= BtnEdit_Click_Save_Change;
+            BtnEdit.Click += BtnEdit_Click;
+            BtnCancel.Visibility = Visibility.Collapsed;
+            SQL.SQLConnect();
+            ShowRight(LAST_ID_CARD);
+            SQL.Close();
+        }
+
+        private void BtnEdit_Click_Save_Change(object sender, RoutedEventArgs e)
+        {
+            BEING_EDITED_CARD = false;
+            string longsql = "";
+            foreach (var item in contentOfCard)
+            {
+                longsql += String.Format($"UPDATE запись SET содержание = '{((TextBox)item.getuielement()).Text}' where идзаписи = {((TextBox)item.getuielement()).Tag} ");
+            }
+            
+            SQL.SQLConnect();
+            SQL.Execute(longsql);
+            SQL.Close();
+
+            GoDeafultBtnEdit();
+        }
+
+        private void BtnEdit_Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            GoDeafultBtnEdit();
         }
     }
 

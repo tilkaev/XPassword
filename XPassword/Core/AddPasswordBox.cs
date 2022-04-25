@@ -12,23 +12,25 @@ namespace XPassword.Core
 
     class AddPasswordBox : IContentOfCard
     {
-        public AddPasswordBox(WindowXpassword _windowsender, string hinttext, string text)
+        public AddPasswordBox(WindowXpassword _windowsender, string hinttext, string text, string id_tag)
         {
             windowsender = _windowsender;
             MainOutputStackPanel = (StackPanel)windowsender.FindName("MainOutputStackPanel");
-            add(hinttext, text);
+            add(hinttext, text, id_tag);
         }
 
         private WindowXpassword windowsender;
         private StackPanel MainOutputStackPanel;
         TextBox uielement;
         Grid grid;
-        String text;
-        bool show = false;
+        public String text;
+        public bool show = false;
 
-        public UIElement getuielement() { return grid; }
+        public UIElement getuielement() { return uielement; }
 
-        private void ManagerForShowHidenPassword(object sender, RoutedEventArgs e)
+        public UIElement getparent() { return grid; }
+
+        public void ManagerForShowHidenPassword(object sender, RoutedEventArgs e)
         {
             show = !show;
             if (show)
@@ -43,12 +45,15 @@ namespace XPassword.Core
 
         private void CopyPasswordToClipboard(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetData(DataFormats.Text, (Object)text);
-            WindowXpassword.ShowInfoFromCopy();
+            if (!windowsender.BEING_EDITED_CARD)
+            {
+                Clipboard.SetData(DataFormats.Text, (Object)text);
+                WindowXpassword.ShowInfoFromCopy();
+            }
         }
 
 
-        public void add(string text, string hinttext)
+        public void add(string text, string hinttext, string id_tag)
         {
             this.text = text;
             Style style = (Style)windowsender.FindResource("TextBoxNotChangable");
@@ -63,7 +68,8 @@ namespace XPassword.Core
             {
                 Text = new String('*', text.Length),
                 Style = style,
-                Padding = padding
+                Padding = padding,
+                Tag = id_tag
             };
             HintAssist.SetHint(uielement, hinttext);
             grid.Children.Add(uielement);
