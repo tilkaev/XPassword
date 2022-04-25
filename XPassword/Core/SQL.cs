@@ -38,7 +38,10 @@ namespace SpaceBaseApp.Core
         {
             try
             {
-                connect.Open();
+                if (connect.State != ConnectionState.Open)
+                {
+                    connect.Open();
+                }
             }
             catch (Exception)
             {
@@ -64,7 +67,7 @@ namespace SpaceBaseApp.Core
             catch (Exception)
             {
                 Close();
-                throw;
+                return null;
             }
 
         }
@@ -83,7 +86,6 @@ namespace SpaceBaseApp.Core
             catch (Exception)
             {
                 Close();
-                throw;
                 return false;
             }
         }
@@ -96,7 +98,6 @@ namespace SpaceBaseApp.Core
             }
             catch (Exception)
             {
-                throw;
                 return;
             }
         }

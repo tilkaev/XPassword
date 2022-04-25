@@ -12,11 +12,11 @@ namespace XPassword.Core
 
     class AddWebTextBox : IContentOfCard
     {
-        public AddWebTextBox(WindowXpassword _windowsender, string hinttext, string text)
+        public AddWebTextBox(WindowXpassword _windowsender, string hinttext, string text, string id_tag)
         {
             windowsender = _windowsender;
             MainOutputStackPanel = (StackPanel)windowsender.FindName("MainOutputStackPanel");
-            add(hinttext, text);
+            add(hinttext, text, id_tag);
         }
 
         private WindowXpassword windowsender;
@@ -25,7 +25,11 @@ namespace XPassword.Core
         String text;
         Grid grid;
 
-        public UIElement getuielement() { return grid; }
+
+        public UIElement getuielement() { return uielement; }
+
+        public UIElement getparent() { return grid; }
+
 
         private static bool IsValidUri(string uri)
         {
@@ -52,12 +56,15 @@ namespace XPassword.Core
 
         private void CopyWebToClipboard(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetData(DataFormats.Text, (Object)text);
-            WindowXpassword.ShowInfoFromCopy();
+            if (!windowsender.BEING_EDITED_CARD)
+            {
+                Clipboard.SetData(DataFormats.Text, (Object)text);
+                WindowXpassword.ShowInfoFromCopy();
+            }
         }
 
 
-        public void add(string text, string hinttext)
+        public void add(string text, string hinttext, string id_tag)
         {
             this.text = text;
             Style style = (Style)windowsender.FindResource("TextBoxNotChangable");
@@ -72,7 +79,8 @@ namespace XPassword.Core
             {
                 Text = text,
                 Style = style,
-                Padding = padding
+                Padding = padding,
+                Tag = id_tag
             };
             HintAssist.SetHint(uielement, hinttext);
             grid.Children.Add(uielement);

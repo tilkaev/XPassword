@@ -11,11 +11,11 @@ namespace XPassword.Core
 {
     class AddTextBox: IContentOfCard
     {
-        public AddTextBox(WindowXpassword _windowsender, string hinttext, string text)
+        public AddTextBox(WindowXpassword _windowsender, string hinttext, string text, string id_tag)
         {
             windowsender = _windowsender;
             MainOutputStackPanel = (StackPanel)windowsender.FindName("MainOutputStackPanel");
-            add(hinttext, text);
+            add(hinttext, text , id_tag);
         }
 
         private WindowXpassword windowsender;
@@ -26,7 +26,9 @@ namespace XPassword.Core
 
         public UIElement getuielement() { return uielement; }
 
-        public void add(string _text, string hinttext)
+        public UIElement getparent() { return uielement; }
+
+        public void add(string _text, string hinttext, string id_tag)
         {
             text = _text;
             Style style = (Style)windowsender.FindResource("TextBoxNotChangable");
@@ -34,8 +36,9 @@ namespace XPassword.Core
             uielement = new TextBox()
             {
                 Text = _text,
-                Padding = new Thickness(0)
-        };
+                Padding = new Thickness(0),
+                Tag = id_tag
+            };
             uielement.Style = style;
             uielement.MouseDoubleClick += CopyTextToClipboard;
             HintAssist.SetHint(uielement, hinttext);
@@ -45,8 +48,12 @@ namespace XPassword.Core
 
         private void CopyTextToClipboard(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetData(DataFormats.Text, (Object)text);
-            WindowXpassword.ShowInfoFromCopy();
+            if (!windowsender.BEING_EDITED_CARD)
+            {
+                Clipboard.SetData(DataFormats.Text, (Object)text);
+                WindowXpassword.ShowInfoFromCopy();
+            }
+            
         }
 
         
