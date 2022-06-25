@@ -26,7 +26,7 @@ namespace SpaceBaseApp.Core
             }
             else 
             { 
-            connect = new SqlConnection(@"data source=25.68.7.66\SqlExpress;initial catalog=XPassword;user id=user;password=124279123;MultipleActiveResultSets=True;App=EntityFramework");
+            connect = new SqlConnection(@"data source=TIMUR-HOME\SqlExpress;initial catalog=XPassword;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework");
             }
         }
 

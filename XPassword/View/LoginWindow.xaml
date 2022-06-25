@@ -11,7 +11,8 @@
         Background="Transparent"
         WindowStyle="None"
         AllowsTransparency="True"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
 
 
     <Border CornerRadius="5" 
